@@ -36,7 +36,7 @@
             color: #2563eb;
             border-right: 3px solid #2563eb;
         }
-        /* Custom scrollbar for a cleaner look */
+        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -51,14 +51,21 @@
         <span id="toast-message" class="font-medium">Action successful!</span>
     </div>
 
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-30 hidden transition-opacity duration-300 md:hidden"></div>
+
     <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex z-10">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 w-64 bg-white border-r border-slate-200 flex flex-col justify-between z-40 transition-transform duration-300 ease-in-out">
         <div>
-            <div class="h-16 flex items-center px-6 border-b border-slate-100">
+            <div class="h-16 flex items-center px-6 border-b border-slate-100 justify-between">
                 <div class="flex items-center space-x-2 text-brand-600">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     <span class="text-xl font-bold tracking-tight">SponsorSync</span>
                 </div>
+                <!-- Close button for mobile -->
+                <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-slate-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
             <nav class="mt-6 flex flex-col space-y-1">
                 <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors w-full text-left">
@@ -68,6 +75,10 @@
                 <button onclick="navigate('discover')" id="nav-discover" class="nav-item flex items-center px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors w-full text-left">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     Discover Sponsors
+                </button>
+                <button onclick="navigate('proposals')" id="nav-proposals" class="nav-item flex items-center px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors w-full text-left">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    Creative Proposals
                 </button>
                 <button onclick="navigate('messages')" id="nav-messages" class="nav-item flex items-center px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors w-full text-left relative">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
@@ -93,20 +104,23 @@
         </div>
     </aside>
 
-    <!-- Mobile Header (Visible only on small screens) -->
-    <div class="md:hidden fixed top-0 w-full bg-white border-b border-slate-200 z-20 flex justify-between items-center px-4 h-16">
-        <div class="flex items-center space-x-2 text-brand-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            <span class="font-bold tracking-tight">SponsorSync</span>
-        </div>
-        <button class="text-slate-500 hover:text-slate-800">
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 w-full bg-white border-b border-slate-200 z-20 flex justify-between items-center px-4 h-16 shadow-sm">
+        <button onclick="toggleSidebar()" class="text-slate-500 hover:text-slate-800 p-2 -ml-2">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <div class="flex items-center space-x-2 text-brand-600">
+            <span class="font-bold tracking-tight text-lg">SponsorSync</span>
+        </div>
+        <!-- Return Home Button -->
+        <button onclick="navigate('dashboard')" class="text-brand-600 hover:text-brand-800 p-2 -mr-2 flex flex-col items-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
         </button>
     </div>
 
     <!-- Main Content Area -->
-    <main class="flex-1 overflow-y-auto mt-16 md:mt-0 relative">
-        <div class="max-w-5xl mx-auto p-6 lg:p-10">
+    <main class="flex-1 overflow-y-auto mt-16 md:mt-0 relative w-full">
+        <div class="max-w-5xl mx-auto p-4 sm:p-6 lg:p-10">
 
             <!-- DASHBOARD VIEW -->
             <section id="view-dashboard" class="view-section active">
@@ -115,9 +129,8 @@
                     <p class="text-slate-500 mt-1">Here is the status of your sponsorship efforts.</p>
                 </header>
 
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex items-center">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex items-center">
                         <div class="p-3 rounded-lg bg-blue-50 text-blue-600 mr-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                         </div>
@@ -126,7 +139,7 @@
                             <p class="text-2xl font-bold text-slate-900">124</p>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex items-center">
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex items-center">
                         <div class="p-3 rounded-lg bg-green-50 text-green-600 mr-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
@@ -135,7 +148,7 @@
                             <p class="text-2xl font-bold text-slate-900">3</p>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex items-center">
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex items-center">
                         <div class="p-3 rounded-lg bg-amber-50 text-amber-600 mr-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
@@ -148,28 +161,28 @@
 
                 <!-- Recent Activity -->
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
                         <h2 class="text-lg font-semibold text-slate-800">Recent Activity</h2>
                         <button onclick="navigate('messages')" class="text-sm text-brand-600 font-medium hover:text-brand-700">View all</button>
                     </div>
                     <ul class="divide-y divide-slate-100">
-                        <li class="px-6 py-4 hover:bg-slate-50 transition-colors flex items-start justify-between">
+                        <li class="px-4 py-4 hover:bg-slate-50 transition-colors flex items-start justify-between">
                             <div class="flex items-start">
-                                <div class="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-xl mr-4 border border-slate-200">🍕</div>
+                                <div class="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-xl mr-3 border border-slate-200 flex-shrink-0">🍕</div>
                                 <div>
                                     <p class="text-sm font-semibold text-slate-900">Luigi's Pizzeria</p>
-                                    <p class="text-sm text-slate-500 mt-0.5">Sent a message regarding the "Front of Jersey" package.</p>
+                                    <p class="text-sm text-slate-500 mt-0.5 pr-2">Sent a message regarding the "Front of Jersey" package.</p>
                                     <p class="text-xs text-slate-400 mt-1">2 hours ago</p>
                                 </div>
                             </div>
-                            <button onclick="navigate('messages')" class="px-3 py-1.5 bg-brand-50 text-brand-700 text-xs font-semibold rounded-lg border border-brand-100 hover:bg-brand-100">Reply</button>
+                            <button onclick="navigate('messages')" class="hidden sm:block px-3 py-1.5 bg-brand-50 text-brand-700 text-xs font-semibold rounded-lg border border-brand-100 hover:bg-brand-100 flex-shrink-0">Reply</button>
                         </li>
-                        <li class="px-6 py-4 hover:bg-slate-50 transition-colors flex items-start justify-between">
+                        <li class="px-4 py-4 hover:bg-slate-50 transition-colors flex items-start justify-between">
                             <div class="flex items-start">
-                                <div class="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-xl mr-4 border border-slate-200">🚗</div>
+                                <div class="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-xl mr-3 border border-slate-200 flex-shrink-0">🚗</div>
                                 <div>
                                     <p class="text-sm font-semibold text-slate-900">City Ford Dealership</p>
-                                    <p class="text-sm text-slate-500 mt-0.5">Viewed your Media Kit.</p>
+                                    <p class="text-sm text-slate-500 mt-0.5 pr-2">Viewed your Media Kit.</p>
                                     <p class="text-xs text-slate-400 mt-1">Yesterday</p>
                                 </div>
                             </div>
@@ -185,14 +198,14 @@
                         <h1 class="text-2xl font-bold text-slate-900">Discover Sponsors</h1>
                         <p class="text-slate-500 mt-1">Local businesses looking to invest in community sports.</p>
                     </div>
-                    <div class="flex space-x-2">
-                        <select class="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-sm">
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full md:w-auto">
+                        <select class="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-brand-500 shadow-sm w-full">
                             <option>All Industries</option>
                             <option>Food & Beverage</option>
                             <option>Health & Wellness</option>
                             <option>Automotive</option>
                         </select>
-                        <select class="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-sm">
+                        <select class="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-brand-500 shadow-sm w-full">
                             <option>Any Budget</option>
                             <option>Under $500</option>
                             <option>$500 - $2,000</option>
@@ -204,73 +217,28 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Sponsor Card 1 -->
                     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                        <div class="p-6">
+                        <div class="p-5 sm:p-6">
                             <div class="flex justify-between items-start mb-4">
                                 <div class="flex items-center">
-                                    <div class="w-12 h-12 rounded bg-red-50 flex items-center justify-center text-2xl border border-red-100 mr-4">🍕</div>
+                                    <div class="w-12 h-12 rounded bg-red-50 flex items-center justify-center text-2xl border border-red-100 mr-3 sm:mr-4 flex-shrink-0">🍕</div>
                                     <div>
-                                        <h3 class="font-bold text-lg text-slate-900">Luigi's Pizzeria</h3>
-                                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Food & Beverage • 2.1 miles away</p>
+                                        <h3 class="font-bold text-lg text-slate-900 leading-tight">Luigi's Pizzeria</h3>
+                                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider mt-1">Food & Beverage • 2.1 mi</p>
                                     </div>
                                 </div>
-                                <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">95% Match</span>
+                                <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200 whitespace-nowrap ml-2">95% Match</span>
                             </div>
                             <div class="space-y-3 mb-6">
                                 <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-slate-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <svg class="w-5 h-5 text-slate-400 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                     <div>
                                         <p class="text-sm font-semibold text-slate-700">Looking for:</p>
                                         <p class="text-sm text-slate-600">Jersey logo placement for a local youth or amateur adult team.</p>
                                     </div>
                                 </div>
-                                <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-slate-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <div>
-                                        <p class="text-sm font-semibold text-slate-700">Budget/Offering:</p>
-                                        <p class="text-sm text-slate-600">$500/season + post-game pizza discounts.</p>
-                                    </div>
-                                </div>
                             </div>
-                            <div class="flex space-x-3">
-                                <button onclick="showToast('Pitch Sent to Luigi\'s Pizzeria!')" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm text-center">Send Pitch</button>
-                                <button onclick="showToast('Saved to your shortlist.')" class="p-2 border border-slate-300 hover:bg-slate-50 rounded-lg text-slate-600 transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sponsor Card 2 -->
-                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                        <div class="p-6">
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="flex items-center">
-                                    <div class="w-12 h-12 rounded bg-blue-50 flex items-center justify-center text-2xl border border-blue-100 mr-4">💆‍♂️</div>
-                                    <div>
-                                        <h3 class="font-bold text-lg text-slate-900">Elite Physio Clinic</h3>
-                                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Health & Wellness • 4.5 miles away</p>
-                                    </div>
-                                </div>
-                                <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">82% Match</span>
-                            </div>
-                            <div class="space-y-3 mb-6">
-                                <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-slate-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                    <div>
-                                        <p class="text-sm font-semibold text-slate-700">Looking for:</p>
-                                        <p class="text-sm text-slate-600">Social media mentions and banner at local tournaments.</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-slate-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <div>
-                                        <p class="text-sm font-semibold text-slate-700">Budget/Offering:</p>
-                                        <p class="text-sm text-slate-600">In-Kind: Free injury assessments & recovery sessions for squad.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex space-x-3">
-                                <button onclick="showToast('Pitch Sent to Elite Physio Clinic!')" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm text-center">Send Pitch</button>
+                            <div class="flex space-x-2">
+                                <button onclick="showToast('Pitch Sent to Luigi\'s Pizzeria!')" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm text-center">Send Pitch</button>
                                 <button onclick="showToast('Saved to your shortlist.')" class="p-2 border border-slate-300 hover:bg-slate-50 rounded-lg text-slate-600 transition-colors">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
                                 </button>
@@ -280,23 +248,82 @@
                 </div>
             </section>
 
+            <!-- CREATIVE PROPOSALS VIEW (NEW) -->
+            <section id="view-proposals" class="view-section">
+                <header class="mb-6">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-900">Creative Activities</h1>
+                            <p class="text-slate-500 mt-1">Move beyond logos. Propose and discover engagement-driven sponsorships.</p>
+                        </div>
+                        <button onclick="showToast('Opening proposal creator...')" class="bg-brand-600 hover:bg-brand-700 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm whitespace-nowrap">
+                            + New Proposal
+                        </button>
+                    </div>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Proposal Card 1 -->
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                        <div class="p-6 flex-1">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">Community Event</span>
+                                <span class="text-xs text-slate-400">Posted by Luigi's Pizzeria</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 mb-2">"Win = Free Pizza Slice for Fans"</h3>
+                            <p class="text-sm text-slate-600 mb-4">Instead of a jersey logo, we want to drive foot traffic. If your home team wins, we will honor a digital voucher for 1 free slice for anyone in attendance. We supply the QR codes.</p>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 mb-4">
+                                <p class="text-xs font-semibold text-slate-700 uppercase mb-1">Budget / Value</p>
+                                <p class="text-sm text-slate-900">Up to $500 in pizza value per game.</p>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                            <span class="text-xs font-medium text-slate-500">4 clubs interested</span>
+                            <button onclick="showToast('Interest registered! We will notify Luigi\'s.')" class="text-sm font-semibold text-brand-600 bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-lg transition-colors">I'm Interested</button>
+                        </div>
+                    </div>
+
+                    <!-- Proposal Card 2 -->
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                        <div class="p-6 flex-1">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">Performance Based</span>
+                                <span class="text-xs text-slate-400">Posted by City Ford</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 mb-2">"Clean Sheet Donations"</h3>
+                            <p class="text-sm text-slate-600 mb-4">We are looking for a defensive-minded team. For every game your team does not concede a goal, City Ford will donate $100 to the local food bank in your team's name, plus $50 direct to club funds.</p>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 mb-4">
+                                <p class="text-xs font-semibold text-slate-700 uppercase mb-1">Budget / Value</p>
+                                <p class="text-sm text-slate-900">$150 per clean sheet (Max $1,500/season).</p>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                            <span class="text-xs font-medium text-slate-500">1 club interested</span>
+                            <button onclick="showToast('Interest registered! We will notify City Ford.')" class="text-sm font-semibold text-brand-600 bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-lg transition-colors">I'm Interested</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- MESSAGES VIEW -->
             <section id="view-messages" class="view-section">
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row h-[calc(100vh-120px)] overflow-hidden">
-                    <!-- Chat List -->
-                    <div class="w-full md:w-1/3 border-r border-slate-200 flex flex-col">
-                        <div class="p-4 border-b border-slate-100 bg-slate-50">
+                <!-- Wrapper for chat UI -->
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row h-[calc(100vh-140px)] md:h-[calc(100vh-120px)] overflow-hidden relative">
+                    
+                    <!-- Chat List (Visible on mobile initially, always visible on desktop) -->
+                    <div id="chat-list" class="w-full md:w-1/3 border-r border-slate-200 flex flex-col h-full absolute md:relative z-10 bg-white transition-transform duration-300">
+                        <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                             <h2 class="font-bold text-slate-800">Inbox</h2>
                         </div>
                         <div class="overflow-y-auto flex-1">
-                            <div class="p-4 border-b border-slate-100 bg-brand-50 cursor-pointer">
+                            <div onclick="openChat('Luigi\'s Pizzeria', '🍕')" class="p-4 border-b border-slate-100 bg-brand-50 cursor-pointer hover:bg-brand-100 transition-colors">
                                 <div class="flex justify-between items-start mb-1">
                                     <h3 class="font-semibold text-sm text-slate-900">Luigi's Pizzeria</h3>
                                     <span class="text-xs text-brand-600 font-medium">10:42 AM</span>
                                 </div>
                                 <p class="text-sm text-slate-600 truncate">Sounds great! Do you have a mock-up of the jersey?</p>
                             </div>
-                            <div class="p-4 border-b border-slate-100 hover:bg-slate-50 cursor-pointer">
+                            <div onclick="openChat('City Ford Dealership', '🚗')" class="p-4 border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors">
                                 <div class="flex justify-between items-start mb-1">
                                     <h3 class="font-semibold text-sm text-slate-900">City Ford Dealership</h3>
                                     <span class="text-xs text-slate-400">Yesterday</span>
@@ -305,36 +332,44 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Chat Area -->
-                    <div class="w-full md:w-2/3 flex flex-col bg-slate-50">
-                        <div class="p-4 border-b border-slate-200 bg-white flex justify-between items-center">
+
+                    <!-- Chat Area (Hidden on mobile initially, visible on desktop) -->
+                    <div id="chat-area" class="w-full md:w-2/3 flex flex-col bg-slate-50 h-full absolute md:relative transform translate-x-full md:translate-x-0 transition-transform duration-300 z-20">
+                        <div class="p-3 sm:p-4 border-b border-slate-200 bg-white flex justify-between items-center">
                             <div class="flex items-center">
-                                <div class="w-8 h-8 rounded bg-red-50 flex items-center justify-center text-lg border border-red-100 mr-3">🍕</div>
-                                <h3 class="font-bold text-slate-800">Luigi's Pizzeria</h3>
+                                <!-- Mobile Back Button -->
+                                <button onclick="closeChat()" class="md:hidden mr-2 p-1.5 text-slate-500 hover:text-slate-800 bg-slate-100 rounded-lg">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                                </button>
+                                <div id="chat-icon" class="w-8 h-8 rounded bg-red-50 flex items-center justify-center text-lg border border-red-100 mr-3">🍕</div>
+                                <h3 id="chat-title" class="font-bold text-slate-800 truncate max-w-[150px] sm:max-w-none">Luigi's Pizzeria</h3>
                             </div>
-                            <button class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium transition-colors">
-                                View Profile
-                            </button>
+                            <div class="flex space-x-2">
+                                <button onclick="navigate('dashboard')" class="text-xs sm:text-sm bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 sm:px-3 py-1.5 rounded-lg border border-slate-200 font-medium transition-colors hidden sm:flex items-center">
+                                    Exit Chat
+                                </button>
+                            </div>
                         </div>
-                        <div class="flex-1 p-6 overflow-y-auto space-y-4">
+                        <div class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4">
                             <div class="flex justify-center"><span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">Today</span></div>
                             
                             <div class="flex justify-end">
-                                <div class="bg-brand-600 text-white p-3 rounded-xl rounded-tr-none max-w-[80%] shadow-sm">
+                                <div class="bg-brand-600 text-white p-3 rounded-xl rounded-tr-none max-w-[85%] sm:max-w-[75%] shadow-sm">
                                     <p class="text-sm">Hi Luigi! We saw you're looking to sponsor a local team. We play in the Metro League and have 200+ attendees per game. Would love to feature your logo on our jerseys!</p>
                                 </div>
                             </div>
                             <div class="flex justify-start">
-                                <div class="bg-white text-slate-800 border border-slate-200 p-3 rounded-xl rounded-tl-none max-w-[80%] shadow-sm">
+                                <div class="bg-white text-slate-800 border border-slate-200 p-3 rounded-xl rounded-tl-none max-w-[85%] sm:max-w-[75%] shadow-sm">
                                     <p class="text-sm">Sounds great! Do you have a mock-up of the jersey?</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="p-4 bg-white border-t border-slate-200">
+                        <div class="p-3 sm:p-4 bg-white border-t border-slate-200">
                             <div class="flex space-x-2">
-                                <input type="text" placeholder="Type your message..." class="flex-1 border border-slate-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
-                                <button onclick="showToast('Message Sent!')" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                <input type="text" placeholder="Type a message..." class="flex-1 border border-slate-300 rounded-lg px-3 sm:px-4 py-2 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                                <button onclick="showToast('Message Sent!')" class="bg-brand-600 hover:bg-brand-700 text-white px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors flex-shrink-0">
+                                    <svg class="w-5 h-5 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                    <span class="sm:hidden text-sm">Send</span>
                                 </button>
                             </div>
                         </div>
@@ -344,31 +379,30 @@
 
             <!-- PROFILE / MEDIA KIT VIEW -->
             <section id="view-profile" class="view-section">
-                <header class="mb-6 flex justify-between items-end">
+                <header class="mb-6 flex flex-col sm:flex-row justify-between sm:items-end gap-4">
                     <div>
                         <h1 class="text-2xl font-bold text-slate-900">Your Media Kit</h1>
                         <p class="text-slate-500 mt-1">This is what sponsors see when you pitch them.</p>
                     </div>
-                    <button class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+                    <button class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm self-start sm:self-auto">
                         Edit Profile
                     </button>
                 </header>
 
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                    <!-- Cover Image Placeholder -->
-                    <div class="h-32 bg-gradient-to-r from-brand-600 to-blue-400 w-full relative">
-                        <div class="absolute -bottom-10 left-6 w-20 h-20 bg-white rounded-xl border-4 border-white shadow-md flex items-center justify-center text-2xl font-bold text-brand-600">
+                    <div class="h-24 sm:h-32 bg-gradient-to-r from-brand-600 to-blue-400 w-full relative">
+                        <div class="absolute -bottom-8 left-6 w-16 h-16 sm:-bottom-10 sm:w-20 sm:h-20 bg-white rounded-xl border-4 border-white shadow-md flex items-center justify-center text-xl sm:text-2xl font-bold text-brand-600">
                             WF
                         </div>
                     </div>
                     
-                    <div class="pt-14 px-8 pb-8">
-                        <div class="flex justify-between items-start mb-6">
+                    <div class="pt-12 sm:pt-14 px-5 sm:px-8 pb-8">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 gap-3">
                             <div>
-                                <h2 class="text-2xl font-bold text-slate-900">Westside FC</h2>
-                                <p class="text-slate-500 font-medium">Amateur Adult Soccer Club • Established 2018</p>
+                                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Westside FC</h2>
+                                <p class="text-sm text-slate-500 font-medium">Amateur Adult Soccer Club • Est. 2018</p>
                             </div>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 border border-green-200 self-start">
                                 Actively Seeking Sponsors
                             </span>
                         </div>
@@ -380,26 +414,6 @@
                                     <p class="text-slate-600 text-sm leading-relaxed">
                                         Westside FC is a competitive amateur soccer team playing in the Premier division of the City Metro League. Our roster consists of 25 dedicated young professionals. We pride ourselves on community engagement and host two youth soccer clinics per year.
                                     </p>
-                                </div>
-                                
-                                <div>
-                                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Available Sponsorship Assets</h3>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div class="border border-slate-200 rounded-lg p-4">
-                                            <div class="flex justify-between items-center mb-1">
-                                                <h4 class="font-semibold text-slate-800 text-sm">Front of Jersey Logo</h4>
-                                                <span class="text-brand-600 font-bold text-sm">$800</span>
-                                            </div>
-                                            <p class="text-xs text-slate-500">Premium placement on our home and away kits for the 2024 season.</p>
-                                        </div>
-                                        <div class="border border-slate-200 rounded-lg p-4">
-                                            <div class="flex justify-between items-center mb-1">
-                                                <h4 class="font-semibold text-slate-800 text-sm">Social Media Shoutouts</h4>
-                                                <span class="text-brand-600 font-bold text-sm">$250</span>
-                                            </div>
-                                            <p class="text-xs text-slate-500">1 dedicated post per month + story features on match days.</p>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -414,10 +428,6 @@
                                         <p class="text-xs text-slate-500 font-medium uppercase">Instagram Followers</p>
                                         <p class="text-lg font-bold text-slate-900">2,450</p>
                                     </li>
-                                    <li>
-                                        <p class="text-xs text-slate-500 font-medium uppercase">Newsletter Subscribers</p>
-                                        <p class="text-lg font-bold text-slate-900">420</p>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -429,7 +439,26 @@
     </main>
 
     <script>
-        // Simple Single Page App Router Logic
+        // --- Sidebar Logic for Mobile ---
+        let sidebarOpen = false;
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebarOpen = !sidebarOpen;
+            
+            if(sidebarOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                // slight delay to allow display block to apply before opacity transition
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+        // --- Navigation Logic ---
         function navigate(viewId) {
             // Hide all views
             document.querySelectorAll('.view-section').forEach(el => {
@@ -447,29 +476,67 @@
             const navItem = document.getElementById('nav-' + viewId);
             if(navItem) navItem.classList.add('active');
             
+            // If on mobile and sidebar is open, close it
+            if(sidebarOpen && window.innerWidth < 768) {
+                toggleSidebar();
+            }
+
             // Scroll to top
             document.querySelector('main').scrollTop = 0;
+            
+            // Reset mobile chat view if navigating away
+            if(viewId !== 'messages') {
+                closeChat(); 
+            }
         }
 
-        // Toast Notification System
+        // --- Mobile Chat UI Logic ---
+        function openChat(name, icon) {
+            document.getElementById('chat-title').innerText = name;
+            document.getElementById('chat-icon').innerText = icon;
+            
+            const chatList = document.getElementById('chat-list');
+            const chatArea = document.getElementById('chat-area');
+            
+            // Slide chat area in on mobile
+            if(window.innerWidth < 768) {
+                chatArea.classList.remove('translate-x-full');
+            }
+        }
+
+        function closeChat() {
+            const chatArea = document.getElementById('chat-area');
+            if(window.innerWidth < 768) {
+                chatArea.classList.add('translate-x-full');
+            }
+        }
+
+        // --- Toast Notification System ---
         let toastTimeout;
         function showToast(message) {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toast-message');
             
             toastMsg.textContent = message;
-            
-            // Show toast (remove translate to slide in, set opacity)
             toast.classList.remove('translate-y-[-150%]', 'opacity-0');
-            
-            // Clear existing timeout to prevent blinking if clicked rapidly
             clearTimeout(toastTimeout);
             
-            // Hide after 3 seconds
             toastTimeout = setTimeout(() => {
                 toast.classList.add('translate-y-[-150%]', 'opacity-0');
             }, 3000);
         }
+
+        // Handle resize events to prevent UI bugs when rotating phone / resizing window
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                // Ensure chat area is visible on desktop regardless of mobile state
+                document.getElementById('chat-area').classList.remove('translate-x-full');
+            } else {
+                // Keep it hidden on mobile unless actively viewing a chat
+                // (Simple fix: just close chat when switching to mobile view)
+                document.getElementById('chat-area').classList.add('translate-x-full');
+            }
+        });
     </script>
 </body>
 </html>
