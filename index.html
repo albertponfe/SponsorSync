@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,7 +74,11 @@
                 </button>
             </div>
             <nav class="mt-6 flex flex-col space-y-1 px-4">
-                <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-4 py-3 text-sm font-bold text-slate-500 hover:text-indigo-600 rounded-xl transition-all w-full text-left">
+                <button onclick="navigate('home')" id="nav-home" class="nav-item active flex items-center px-4 py-3 text-sm font-bold text-slate-500 hover:text-indigo-600 rounded-xl transition-all w-full text-left">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Home
+                </button>
+                <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item flex items-center px-4 py-3 text-sm font-bold text-slate-500 hover:text-indigo-600 rounded-xl transition-all w-full text-left">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     Dashboard
                 </button>
@@ -122,8 +127,27 @@
     <main class="flex-1 overflow-y-auto mt-16 md:mt-0 relative w-full">
         <div class="max-w-6xl mx-auto p-6 lg:p-10">
 
+            <!-- HOME INTRO VIEW -->
+            <section id="view-home" class="view-section active">
+                <header class="mb-10">
+                    <h1 class="text-3xl font-extrabold font-display text-slate-900">Welcome to SponsorSync</h1>
+                    <p class="text-slate-500 mt-1 italic">
+                        SponsorSync is the bridge between amateur teams and local brands. Click any of the
+                        <a href="#" onclick="navigate('dashboard'); return false;" class="text-indigo-600 hover:underline">Dashboard</a>,
+                        <a href="#" onclick="navigate('discover'); return false;" class="text-indigo-600 hover:underline">Discover Sponsors</a>,
+                        <a href="#" onclick="navigate('proposals'); return false;" class="text-indigo-600 hover:underline">Creative Proposals</a>,
+                        <a href="#" onclick="navigate('messages'); return false;" class="text-indigo-600 hover:underline">Messages</a>, or
+                        <a href="#" onclick="navigate('profile'); return false;" class="text-indigo-600 hover:underline">Media Kit</a> sections to learn more.
+                    </p>
+                </header>
+                <p class="text-slate-600 leading-relaxed">
+                    Use the sidebar to navigate or tap the keywords above to jump into any feature. SponsorSync helps
+                    clubs pitch, communicate, and showcase their value to sponsors all in one place.
+                </p>
+            </section>
+
             <!-- DASHBOARD VIEW -->
-            <section id="view-dashboard" class="view-section active">
+            <section id="view-dashboard" class="view-section">
                 <header class="mb-10">
                     <h1 class="text-3xl font-extrabold font-display text-slate-900">Dashboard</h1>
                     <p class="text-slate-500 mt-1 italic">Welcome back, Westside FC.</p>
