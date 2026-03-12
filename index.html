@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SponsorSync | MVP0 Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-item.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-right: 3px solid #2563eb;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen flex overflow-hidden antialiased">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-y-[-150%] opacity-0 z-50 flex items-center space-x-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="toast-message" class="font-medium">Action successful!</span>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex z-10">
+        <div>
+            <div class="h-16 flex items-center px-6 border-b border-slate-100">
+                <div class="flex items-center space-x-2 text-brand-600">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span class="text-xl font-bold tracking-tight">SponsorSync</span>
+                </div>
+            </div>
+            <nav class="mt-6 flex flex-col space-y-1">
+                <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors w-full text-left">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Dashboard
+                </button>
+                <button onclick="navigate('discover')" id="nav-discover" class="nav-item flex items-center px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors w-full text-left">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    Discover Sponsors
+                </button>
+                <button onclick="navigate('messages')" id="nav-messages" class="nav-item flex items-center px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors w-full text-left relative">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                    Messages
+                    <span class="absolute right-6 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">2</span>
+                </button>
+                <button onclick="navigate('profile')" id="nav-profile" class="nav-item flex items-center px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors w-full text-left">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    Media Kit (Profile)
+                </button>
+            </nav>
+        </div>
+        <div class="p-6 border-t border-slate-100">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold border border-brand-200">
+                    WF
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-semibold text-slate-800">Westside FC</p>
+                    <p class="text-xs text-slate-500">Amateur Club</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile Header (Visible only on small screens) -->
+    <div class="md:hidden fixed top-0 w-full bg-white border-b border-slate-200 z-20 flex justify-between items-center px-4 h-16">
+        <div class="flex items-center space-x-2 text-brand-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            <span class="font-bold tracking-tight">SponsorSync</span>
+        </div>
+        <button class="text-slate-500 hover:text-slate-800">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto mt-16 md:mt-0 relative">
+        <div class="max-w-5xl mx-auto p-6 lg:p-10">
+
+            <!-- DASHBOARD VIEW -->
+            <section id="view-dashboard" class="view-section active">
+                <header class="mb-8">
+                    <h1 class="text-2xl font-bold text-slate-900">Welcome back, Westside FC! 👋</h1>
+                    <p class="text-slate-500 mt-1">Here is the status of your sponsorship efforts.</p>
+                </header>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex items-center">
+                        <div class="p-3 rounded-lg bg-blue-50 text-blue-600 mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">Profile Views</p>
+                            <p class="text-2xl font-bold text-slate-900">124</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex items-center">
+                        <div class="p-3 rounded-lg bg-green-50 text-green-600 mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">Active Pitches</p>
+                            <p class="text-2xl font-bold text-slate-900">3</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex items-center">
+                        <div class="p-3 rounded-lg bg-amber-50 text-amber-600 mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">Pending Offers</p>
+                            <p class="text-2xl font-bold text-slate-900">1</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-slate-800">Recent Activity</h2>
+                        <button onclick="navigate('messages')" class="text-sm text-brand-600 font-medium hover:text-brand-700">View all</button>
+                    </div>
+                    <ul class="divide-y divide-slate-100">
+                        <li class="px-6 py-4 hover:bg-slate-50 transition-colors flex items-start justify-between">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-xl mr-4 border border-slate-200">🍕</div>
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-900">Luigi's Pizzeria</p>
+                                    <p class="text-sm text-slate-500 mt-0.5">Sent a message regarding the "Front of Jersey" package.</p>
+                                    <p class="text-xs text-slate-400 mt-1">2 hours ago</p>
+                                </div>
+                            </div>
+                            <button onclick="navigate('messages')" class="px-3 py-1.5 bg-brand-50 text-brand-700 text-xs font-semibold rounded-lg border border-brand-100 hover:bg-brand-100">Reply</button>
+                        </li>
+                        <li class="px-6 py-4 hover:bg-slate-50 transition-colors flex items-start justify-between">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-xl mr-4 border border-slate-200">🚗</div>
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-900">City Ford Dealership</p>
+                                    <p class="text-sm text-slate-500 mt-0.5">Viewed your Media Kit.</p>
+                                    <p class="text-xs text-slate-400 mt-1">Yesterday</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- DISCOVER VIEW -->
+            <section id="view-discover" class="view-section">
+                <header class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Discover Sponsors</h1>
+                        <p class="text-slate-500 mt-1">Local businesses looking to invest in community sports.</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <select class="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-sm">
+                            <option>All Industries</option>
+                            <option>Food & Beverage</option>
+                            <option>Health & Wellness</option>
+                            <option>Automotive</option>
+                        </select>
+                        <select class="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-sm">
+                            <option>Any Budget</option>
+                            <option>Under $500</option>
+                            <option>$500 - $2,000</option>
+                            <option>In-Kind (Gear/Services)</option>
+                        </select>
+                    </div>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Sponsor Card 1 -->
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 rounded bg-red-50 flex items-center justify-center text-2xl border border-red-100 mr-4">🍕</div>
+                                    <div>
+                                        <h3 class="font-bold text-lg text-slate-900">Luigi's Pizzeria</h3>
+                                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Food & Beverage • 2.1 miles away</p>
+                                    </div>
+                                </div>
+                                <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">95% Match</span>
+                            </div>
+                            <div class="space-y-3 mb-6">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-slate-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-700">Looking for:</p>
+                                        <p class="text-sm text-slate-600">Jersey logo placement for a local youth or amateur adult team.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-slate-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-700">Budget/Offering:</p>
+                                        <p class="text-sm text-slate-600">$500/season + post-game pizza discounts.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button onclick="showToast('Pitch Sent to Luigi\'s Pizzeria!')" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm text-center">Send Pitch</button>
+                                <button onclick="showToast('Saved to your shortlist.')" class="p-2 border border-slate-300 hover:bg-slate-50 rounded-lg text-slate-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sponsor Card 2 -->
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 rounded bg-blue-50 flex items-center justify-center text-2xl border border-blue-100 mr-4">💆‍♂️</div>
+                                    <div>
+                                        <h3 class="font-bold text-lg text-slate-900">Elite Physio Clinic</h3>
+                                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Health & Wellness • 4.5 miles away</p>
+                                    </div>
+                                </div>
+                                <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">82% Match</span>
+                            </div>
+                            <div class="space-y-3 mb-6">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-slate-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-700">Looking for:</p>
+                                        <p class="text-sm text-slate-600">Social media mentions and banner at local tournaments.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-slate-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-700">Budget/Offering:</p>
+                                        <p class="text-sm text-slate-600">In-Kind: Free injury assessments & recovery sessions for squad.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button onclick="showToast('Pitch Sent to Elite Physio Clinic!')" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm text-center">Send Pitch</button>
+                                <button onclick="showToast('Saved to your shortlist.')" class="p-2 border border-slate-300 hover:bg-slate-50 rounded-lg text-slate-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MESSAGES VIEW -->
+            <section id="view-messages" class="view-section">
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row h-[calc(100vh-120px)] overflow-hidden">
+                    <!-- Chat List -->
+                    <div class="w-full md:w-1/3 border-r border-slate-200 flex flex-col">
+                        <div class="p-4 border-b border-slate-100 bg-slate-50">
+                            <h2 class="font-bold text-slate-800">Inbox</h2>
+                        </div>
+                        <div class="overflow-y-auto flex-1">
+                            <div class="p-4 border-b border-slate-100 bg-brand-50 cursor-pointer">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="font-semibold text-sm text-slate-900">Luigi's Pizzeria</h3>
+                                    <span class="text-xs text-brand-600 font-medium">10:42 AM</span>
+                                </div>
+                                <p class="text-sm text-slate-600 truncate">Sounds great! Do you have a mock-up of the jersey?</p>
+                            </div>
+                            <div class="p-4 border-b border-slate-100 hover:bg-slate-50 cursor-pointer">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="font-semibold text-sm text-slate-900">City Ford Dealership</h3>
+                                    <span class="text-xs text-slate-400">Yesterday</span>
+                                </div>
+                                <p class="text-sm text-slate-500 truncate">We are reviewing applications this Friday.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chat Area -->
+                    <div class="w-full md:w-2/3 flex flex-col bg-slate-50">
+                        <div class="p-4 border-b border-slate-200 bg-white flex justify-between items-center">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded bg-red-50 flex items-center justify-center text-lg border border-red-100 mr-3">🍕</div>
+                                <h3 class="font-bold text-slate-800">Luigi's Pizzeria</h3>
+                            </div>
+                            <button class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium transition-colors">
+                                View Profile
+                            </button>
+                        </div>
+                        <div class="flex-1 p-6 overflow-y-auto space-y-4">
+                            <div class="flex justify-center"><span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">Today</span></div>
+                            
+                            <div class="flex justify-end">
+                                <div class="bg-brand-600 text-white p-3 rounded-xl rounded-tr-none max-w-[80%] shadow-sm">
+                                    <p class="text-sm">Hi Luigi! We saw you're looking to sponsor a local team. We play in the Metro League and have 200+ attendees per game. Would love to feature your logo on our jerseys!</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-start">
+                                <div class="bg-white text-slate-800 border border-slate-200 p-3 rounded-xl rounded-tl-none max-w-[80%] shadow-sm">
+                                    <p class="text-sm">Sounds great! Do you have a mock-up of the jersey?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-white border-t border-slate-200">
+                            <div class="flex space-x-2">
+                                <input type="text" placeholder="Type your message..." class="flex-1 border border-slate-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                                <button onclick="showToast('Message Sent!')" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROFILE / MEDIA KIT VIEW -->
+            <section id="view-profile" class="view-section">
+                <header class="mb-6 flex justify-between items-end">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Your Media Kit</h1>
+                        <p class="text-slate-500 mt-1">This is what sponsors see when you pitch them.</p>
+                    </div>
+                    <button class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+                        Edit Profile
+                    </button>
+                </header>
+
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <!-- Cover Image Placeholder -->
+                    <div class="h-32 bg-gradient-to-r from-brand-600 to-blue-400 w-full relative">
+                        <div class="absolute -bottom-10 left-6 w-20 h-20 bg-white rounded-xl border-4 border-white shadow-md flex items-center justify-center text-2xl font-bold text-brand-600">
+                            WF
+                        </div>
+                    </div>
+                    
+                    <div class="pt-14 px-8 pb-8">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-900">Westside FC</h2>
+                                <p class="text-slate-500 font-medium">Amateur Adult Soccer Club • Established 2018</p>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                Actively Seeking Sponsors
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="md:col-span-2 space-y-6">
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2">About Us</h3>
+                                    <p class="text-slate-600 text-sm leading-relaxed">
+                                        Westside FC is a competitive amateur soccer team playing in the Premier division of the City Metro League. Our roster consists of 25 dedicated young professionals. We pride ourselves on community engagement and host two youth soccer clinics per year.
+                                    </p>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Available Sponsorship Assets</h3>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="border border-slate-200 rounded-lg p-4">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <h4 class="font-semibold text-slate-800 text-sm">Front of Jersey Logo</h4>
+                                                <span class="text-brand-600 font-bold text-sm">$800</span>
+                                            </div>
+                                            <p class="text-xs text-slate-500">Premium placement on our home and away kits for the 2024 season.</p>
+                                        </div>
+                                        <div class="border border-slate-200 rounded-lg p-4">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <h4 class="font-semibold text-slate-800 text-sm">Social Media Shoutouts</h4>
+                                                <span class="text-brand-600 font-bold text-sm">$250</span>
+                                            </div>
+                                            <p class="text-xs text-slate-500">1 dedicated post per month + story features on match days.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 rounded-lg p-5 border border-slate-100">
+                                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Audience & Reach</h3>
+                                <ul class="space-y-4">
+                                    <li>
+                                        <p class="text-xs text-slate-500 font-medium uppercase">Average Match Attendance</p>
+                                        <p class="text-lg font-bold text-slate-900">150 - 200</p>
+                                    </li>
+                                    <li>
+                                        <p class="text-xs text-slate-500 font-medium uppercase">Instagram Followers</p>
+                                        <p class="text-lg font-bold text-slate-900">2,450</p>
+                                    </li>
+                                    <li>
+                                        <p class="text-xs text-slate-500 font-medium uppercase">Newsletter Subscribers</p>
+                                        <p class="text-lg font-bold text-slate-900">420</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Simple Single Page App Router Logic
+        function navigate(viewId) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Remove active state from all nav items
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Show target view
+            document.getElementById('view-' + viewId).classList.add('active');
+            
+            // Highlight active nav item
+            const navItem = document.getElementById('nav-' + viewId);
+            if(navItem) navItem.classList.add('active');
+            
+            // Scroll to top
+            document.querySelector('main').scrollTop = 0;
+        }
+
+        // Toast Notification System
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            
+            toastMsg.textContent = message;
+            
+            // Show toast (remove translate to slide in, set opacity)
+            toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+            
+            // Clear existing timeout to prevent blinking if clicked rapidly
+            clearTimeout(toastTimeout);
+            
+            // Hide after 3 seconds
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-[-150%]', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
