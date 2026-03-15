@@ -1,5 +1,3 @@
-import { createAppShell } from './templates/layout.js';
-
 const VALID_USERNAME = 'Albertponfe';
 const VALID_PASSWORD = '123456';
 
@@ -10,7 +8,7 @@ const state = {
 };
 
 const root = document.getElementById('app');
-root.innerHTML = createAppShell();
+root.innerHTML = window.createAppShell();
 
 document.addEventListener('click', handleClick);
 window.addEventListener('resize', syncChatAreaForViewport);

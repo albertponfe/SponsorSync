@@ -1,4 +1,4 @@
-export function createViews() {
+function createViews() {
     return `
         ${createHomeView()}
         ${createDashboardView()}
@@ -260,3 +260,5 @@ function chatListItem(name, icon, time, preview, active = false) {
 function mediaStat(label, value) {
     return `<div class="rounded-2xl bg-white border border-slate-200 p-5"><p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">${label}</p><p class="mt-2 text-2xl font-display font-extrabold text-slate-900">${value}</p></div>`;
 }
+
+window.createViews = createViews;

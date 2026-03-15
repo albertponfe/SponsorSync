@@ -1,4 +1,4 @@
-export function createAuthModals() {
+function createAuthModals() {
     return `
         <div id="login-modal" class="fixed inset-0 z-50 hidden">
             <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" data-action="close-login"></div>
@@ -97,3 +97,5 @@ function createField(id, label, type = 'text') {
         </div>
     `;
 }
+
+window.createAuthModals = createAuthModals;

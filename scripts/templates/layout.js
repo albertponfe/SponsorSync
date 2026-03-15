@@ -1,7 +1,4 @@
-import { createAuthModals } from './auth.js';
-import { createViews } from './views.js';
-
-export function createAppShell() {
+function createAppShell() {
     return `
         <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl transition-all duration-500 opacity-0 translate-y-[-100%] z-50 flex items-center space-x-3 border border-slate-700">
             <div class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
@@ -85,3 +82,5 @@ function createNavButton(view, label, pathMarkup, isActive = false, trailingMark
         </button>
     `;
 }
+
+window.createAppShell = createAppShell;
