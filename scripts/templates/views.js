@@ -66,7 +66,7 @@ function createHomeView() {
                     <p class="text-sm text-slate-500 max-w-xl">These fictional packages make the prototype feel commercially real while staying aligned with the product story in the README.</p>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    ${dealCard('https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=900&q=80', 'Pizza being served at a restaurant', 'Food and beverage', '$4,500 / season', 'Clean Sheet Supper Series', 'Luigi\\'s Pizzeria backs every home clean sheet with a QR coupon, newsletter placement, and branded player interview segment.', '220 redemptions', 'Sleeve logo + socials', 'rose')}
+                    ${dealCard('https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=900&q=80', 'Pizza being served at a restaurant', 'Food and beverage', '$4,500 / season', 'Clean Sheet Supper Series', 'Luigi\'s Pizzeria backs every home clean sheet with a QR coupon, newsletter placement, and branded player interview segment.', '220 redemptions', 'Sleeve logo + socials', 'rose')}
                     ${dealCard('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80', 'Gym equipment in a modern fitness studio', 'Health and fitness', '$7,200 / season', 'Player of the Week Recovery Partner', 'Harbor Fitness funds weekly MVP content, a branded youth clinic, and post-match lead capture through recovery session giveaways.', '140 leads', 'Reels + clinics', 'emerald')}
                     ${dealCard('https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80', 'Professional office workspace', 'Professional services', '$5,800 / season', 'Community Matchday Hub', 'North Harbor Accounting owns the digital match bulletin, giveaway entry form, and year-end sponsor recap report.', '18k impressions', 'Newsletter + report', 'indigo')}
                 </div>
@@ -127,7 +127,7 @@ function createDiscoverView() {
                 <div class="flex space-x-3"><select class="bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm"><option>All Categories</option></select><select class="bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm"><option>Within 10 Miles</option></select></div>
             </header>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                ${discoverCard('https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=1000&q=80', 'Restaurant interior', 'Luigi\\'s Pizzeria', 'Local Business - 2.1 mi', '95% MATCH', 'Looking for jersey visibility, fan coupon redemption, and recurring matchday digital reach in a family-focused local league.', 'Coupon + clean sheet offer', 'Parents and local families', 'Pitching to Luigi\\\'s Pizzeria...')}
+                ${discoverCard('https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=1000&q=80', 'Restaurant interior', 'Luigi\'s Pizzeria', 'Local Business - 2.1 mi', '95% MATCH', 'Looking for jersey visibility, fan coupon redemption, and recurring matchday digital reach in a family-focused local league.', 'Coupon + clean sheet offer', 'Parents and local families', 'Pitching to Luigi\'s Pizzeria...')}
                 ${discoverCard('https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1000&q=80', 'Gym interior', 'Harbor Fitness', 'Regional Chain - 4.8 mi', '89% MATCH', 'Interested in performance-led packages, youth clinic branding, and lead capture around recovery and conditioning.', 'MVP content + clinic', 'Athletes and parents', 'Pitching to Harbor Fitness...')}
             </div>
         </section>
@@ -142,7 +142,7 @@ function createProposalsView() {
                 <button class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all">+ New Proposal</button>
             </header>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                ${proposalCard('https://images.unsplash.com/photo-1571406252241-db4e89d8a08b?auto=format&fit=crop&w=1000&q=80', 'People sharing pizza', 'Engagement', 'Luigi\\'s Pizzeria', 'Clean Sheet = Free Slice', 'If Westside FC records a clean sheet, fans unlock a digital pizza coupon through the match recap email and social story link.', '$500 per match in-kind + traffic lift', '4 clubs interested', 'Interest Registered', 'I\\'m Interested', 'indigo')}
+                ${proposalCard('https://images.unsplash.com/photo-1571406252241-db4e89d8a08b?auto=format&fit=crop&w=1000&q=80', 'People sharing pizza', 'Engagement', 'Luigi\'s Pizzeria', 'Clean Sheet = Free Slice', 'If Westside FC records a clean sheet, fans unlock a digital pizza coupon through the match recap email and social story link.', '$500 per match in-kind + traffic lift', '4 clubs interested', 'Interest Registered', 'I\'m Interested', 'indigo')}
                 ${proposalCard('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1000&q=80', 'Fans in a stadium crowd', 'Lead Generation', 'North Harbor Accounting', 'Matchday Tax Tip + Family Giveaway', 'A sponsored newsletter block shares a practical tax tip for parents and a giveaway form that captures qualified local leads.', '$2,400 campaign + 300 email signups', '2 clubs shortlisted', 'Proposal Saved', 'Save Proposal', 'emerald')}
             </div>
         </section>
@@ -156,7 +156,7 @@ function createMessagesView() {
                 <div id="chat-list" class="w-full md:w-80 border-r border-slate-100 flex flex-col h-full bg-white transition-transform duration-300 z-10">
                     <div class="p-6 border-b border-slate-50 bg-slate-50/50"><h2 class="font-bold text-slate-900 font-display">Inbox</h2><p class="text-sm text-slate-500 mt-1">Keep sponsor discussion in one place instead of chasing email threads.</p></div>
                     <div class="overflow-y-auto flex-1">
-                        ${chatListItem('Luigi\\'s Pizzeria', 'LP', '10:42 AM', '"Sounds great. Can you share the mock-up..."', true)}
+                        ${chatListItem('Luigi\'s Pizzeria', 'LP', '10:42 AM', '"Sounds great. Can you share the mock-up..."', true)}
                         ${chatListItem('Harbor Fitness', 'HF', 'Yesterday', '"We can increase the clinic budget if..."')}
                     </div>
                 </div>
