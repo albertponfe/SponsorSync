@@ -1,0 +1,38 @@
+body {
+    background:
+        radial-gradient(circle at top left, rgba(79, 70, 229, 0.08), transparent 22%),
+        linear-gradient(180deg, #278df3 0%, #121213 100%);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.85);
+}
+
+.view-section {
+    display: none;
+}
+
+.view-section.active {
+    display: block;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-item.active {
+    color: #4f46e5;
+    background: #f5f3ff;
+    box-shadow: inset 4px 0 0 #4f46e5;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
